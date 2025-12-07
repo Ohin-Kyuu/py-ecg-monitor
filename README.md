@@ -25,12 +25,12 @@ pip intstall -r requirement.txt
 ## Usage
 ### Using `uv` (Recommended)
 ```bash
-uv run main.py
+uv run code/main.py
 ```
 ### Using `pip`
 ```bash
 source .venv/bin/activate # Windows / Linux Bash
-python main.py
+python code/main.py
 ```
 
 ## Configuration
