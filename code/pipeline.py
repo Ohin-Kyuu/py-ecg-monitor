@@ -15,46 +15,54 @@ def _highpass(x, state, a):
 
 @njit(cache=True, fastmath=True)
 def _mvavg(x, buf, state):
+    """
+    S[n] = S[n-1] + x[n] - x[n-L], y[n] = S[n]/L
+    y[n] = y[n-1] + (x[n] - x[n-L]) / L
+    """
     idx, s = int(state[0]), state[1]
-    n = len(buf)
-    s += x - buf[idx]
+    L = len(buf)
+    s += x - buf[idx] # x[n] - x[n-L]
+    y = s / L
     buf[idx] = x
-    val = s / n
-    idx = (idx + 1) % n
+    idx = (idx + 1) % L
     state[0], state[1] = idx, s
-    return val
+    return y
 
 @njit(cache=True, fastmath=True)
 def _deriv(x, buf, state, sample_idx):
+    """
+    d[n] = 2x[n] + x[n-1] + 0 x[n-2] - x[n-3] - 2x[n-4]
+    """
     if sample_idx < 5:
         return 0.0
     idx = int(state[0])
     n = len(buf)
     buf[idx] = x
     
-    v0 = buf[idx]                  # x[n]
-    v1 = buf[(idx - 1 + n) % n]    # x[n-1]
-    v3 = buf[(idx - 3 + n) % n]    # x[n-3]
-    v4 = buf[(idx - 4 + n) % n]    # x[n-4]
+    x0 = buf[idx]                  # x[n]
+    x1 = buf[(idx - 1 + n) % n]    # x[n-1]
+    x3 = buf[(idx - 3 + n) % n]    # x[n-3]
+    x4 = buf[(idx - 4 + n) % n]    # x[n-4]
     
-    d = (2 * v0 + v1 - v3 - 2 * v4)
+    d = (2 * x0 + x1 - x3 - 2 * x4)
     
     state[0] = (idx + 1) % n
     return d
 
 @njit(cache=True, fastmath=True)
 def _mwi(x, buf, state):
+    """
+    S[n] = S[n-1] + x[n] - x[n-L]
+    """
     idx, s = int(state[0]), state[1]
-    n = len(buf)
-    s -= buf[idx]
+    L = len(buf)
+    s += x - buf[idx]
     buf[idx] = x
-    s += x
     s = max(0.0, s)
-    val = int(s / n)
-    idx = (idx + 1) % n
+    y = int(s / L)
+    idx = (idx + 1) % L
     state[0], state[1] = idx, s
-    return val
-
+    return y
 
 @njit(cache=True, fastmath=True)
 def _peak(mwi, state, sample_idx, fs, interval, decay, min_th):

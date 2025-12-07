@@ -27,7 +27,7 @@ class Config:
     # Window lengths
     ma_len: int = 8       # Moving Average Lowpass filter
     deriv_len: int = 8    # Derivative filter
-    mwi_len: int = 40     # Moving window integration
+    mwi_len: int = 45     # Moving window integration
     
     # Peak Detection
     interval: int = 200   # Minimum interval between peaks (ms)
