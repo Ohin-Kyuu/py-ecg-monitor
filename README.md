@@ -7,6 +7,7 @@ Implementation of a Real-time ECG signal processing using python.
 
 ## Requirements
 - Python 3.10+
+- Arduino Uno
 
 ## Installation
 Clone this repository and install the dependencies.
@@ -41,6 +42,10 @@ You can customize the signal processing params in `config.py`:
 - `batch_size`: Number of samples to process at once (Default: `10`).
 
 - Other filter params for detailed, lookup `config.py`
+
+## Arduino Setup
+Copy the `src/main.cpp` to your Arduino Project.
+Build & Upload to your Arduino Board. 
 
 ## License
 
