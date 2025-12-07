@@ -32,7 +32,7 @@ class Config:
     # Peak Detection
     interval: int = 200   # Minimum interval between peaks (ms)
     tau: float = 1.30     # Threshold decay time constant
-    min_th: int = 1000     # Minimum Threshold
+    min_th: int = 1000    # Minimum Threshold
 
     # Plot Data buffer
     buf_size: int = 2000
